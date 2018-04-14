@@ -6,6 +6,7 @@ const isPointInPolygon = require('point-in-polygon');
 const googleMaps = require('@google/maps').createClient({
   key: process.env.GOOGLE_MAPS_KEY || 'YOUR_KEY_HERE'
 });
+const DEFAULT_LANGUAGE = 'en';
 
 /**
  * Determine if a place is located within a geographic location
@@ -51,7 +52,7 @@ const hasEnoughReviews = place => {
 const getAllNearbyPlaces = (location, type = '*') => {
   // TODO: there might be some reasons for making radius more dynamic in the future
   let params = {
-    language: 'en',
+    language: DEFAULT_LANGUAGE,
     location,
     radius: 1000
   };
@@ -81,7 +82,7 @@ const getAreaCoordinates = address => {
     googleMaps.geocode(
       {
         address,
-        language: 'en'
+        language: DEFAULT_LANGUAGE
       },
       (err, response) => {
         if (!err) {
@@ -105,7 +106,7 @@ const getAreaCoordinates = address => {
  * @param {String} locationName name of the area to search in
  * @param {String} locationPoints type of place to search for
  */
-async function getPlacesByType(locationName, locationPoints) {
+exports.getPlacesByType = async function(locationName, locationPoints) {
   const areaCoords = await getAreaCoordinates(locationName);
   const increments = 5;
   const latIncrement =
@@ -146,10 +147,5 @@ async function getPlacesByType(locationName, locationPoints) {
   // get unique
   const uniquePlaces = uniqBy(places, place => place.id);
 
-  console.log(uniquePlaces);
-  console.log(`${uniquePlaces.length} found`);
-
   return uniquePlaces;
-}
-
-getPlacesByType('Business Bay', 'restaurant');
+};
