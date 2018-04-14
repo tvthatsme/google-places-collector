@@ -15,8 +15,6 @@ npm install --save google-places-collector
 Get an API Key from google gain permissions to places data. You can either define a property in a seperates .env file under GOOGLE_MAPS_KEY or
 replace the 'YOUR_KEY_HERE' string in the index.js file.
 
-## Usage
-
 ```js
 const googlePlacesCollector = require('./index');
 const results = googlePlacesCollector.getPlacesByType(
