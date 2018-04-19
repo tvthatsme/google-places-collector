@@ -17,10 +17,13 @@ replace the 'YOUR_KEY_HERE' string in the index.js file.
 
 ```js
 const googlePlacesCollector = require('./index');
-const results = googlePlacesCollector.getPlacesByType(
-  'Business Bay',
-  'restaurant'
-);
+
+const getPlaces = async () => {
+  const results = await places.getPlacesByType('Business Bay', 'restaurant');
+  console.log(results);
+};
+
+getPlaces();
 ```
 
 Results will be supplied by an async function with an array of place objects (in this case, a listing of all restraunts within Dubai's Business Bay area).

@@ -106,7 +106,7 @@ const getAreaCoordinates = address => {
  * @param {String} locationName name of the area to search in
  * @param {String} locationPoints type of place to search for
  */
-exports.getPlacesByType = async function(locationName, locationPoints) {
+const getPlacesByType = async function(locationName, locationPoints) {
   const areaCoords = await getAreaCoordinates(locationName);
   const increments = 5;
   const latIncrement =
@@ -149,3 +149,5 @@ exports.getPlacesByType = async function(locationName, locationPoints) {
 
   return uniquePlaces;
 };
+
+module.exports.getPlacesByType = getPlacesByType;
