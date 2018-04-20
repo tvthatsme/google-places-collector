@@ -1,6 +1,6 @@
 {
   "name": "google-places-collector",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "get all the data for areas",
   "main": "index.js",
   "scripts": {

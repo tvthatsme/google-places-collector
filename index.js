@@ -3,8 +3,9 @@ require('dotenv').config();
 const uniqBy = require('lodash/uniqBy');
 const has = require('lodash/has');
 const isPointInPolygon = require('point-in-polygon');
-const googleMaps = require('@google/maps').createClient({
-  key: process.env.GOOGLE_MAPS_KEY || 'YOUR_KEY_HERE'
+const googleMapsClient = require('@google/maps').createClient({
+  key: process.env.GOOGLE_MAPS_KEY || 'YOUR_KEY_HERE',
+  Promise: Promise
 });
 const DEFAULT_LANGUAGE = 'en';
 
@@ -48,9 +49,11 @@ const hasEnoughReviews = place => {
  * @param {*} location
  * @param {*} radius
  * @param {*} type
+ * @returns {Promise}
  */
 const getAllNearbyPlaces = (location, type = '*') => {
-  // TODO: there might be some reasons for making radius more dynamic in the future
+  // TODO: there might be some reasons for making radius more dynamic in the
+  // future
   let params = {
     language: DEFAULT_LANGUAGE,
     location,
@@ -61,43 +64,7 @@ const getAllNearbyPlaces = (location, type = '*') => {
     params['type'] = type;
   }
 
-  return new Promise((resolve, reject) => {
-    googleMaps.placesNearby(params, (err, response) => {
-      if (!err) {
-        resolve(response.json.results);
-      } else {
-        reject(err);
-      }
-    });
-  });
-};
-
-/**
- * Get the bounding coordinates of an area
- *
- * @param {String} address name of area or place
- */
-const getAreaCoordinates = address => {
-  return new Promise((resolve, reject) => {
-    googleMaps.geocode(
-      {
-        address,
-        language: DEFAULT_LANGUAGE
-      },
-      (err, response) => {
-        if (!err) {
-          const matches = response.json.results;
-          if (matches.length) {
-            resolve(matches[0].geometry.bounds);
-          } else {
-            reject('none found');
-          }
-        } else {
-          reject(err);
-        }
-      }
-    );
-  });
+  return googleMapsClient.placesNearby(params).asPromise();
 };
 
 /**
@@ -107,7 +74,12 @@ const getAreaCoordinates = address => {
  * @param {String} locationPoints type of place to search for
  */
 const getPlacesByType = async function(locationName, locationPoints) {
-  const areaCoords = await getAreaCoordinates(locationName);
+  const params = {
+    address: locationName,
+    language: DEFAULT_LANGUAGE
+  };
+  const areaGeocode = await googleMapsClient.geocode(params).asPromise();
+  const areaCoords = areaGeocode.json.results[0].geometry.bounds;
   const increments = 5;
   const latIncrement =
     Math.abs(areaCoords.northeast.lat - areaCoords.southwest.lat) / increments;
@@ -134,7 +106,8 @@ const getPlacesByType = async function(locationName, locationPoints) {
 
   const results = await Promise.all(
     pointsInArea.map(async point => {
-      return await getAllNearbyPlaces(point, locationPoints);
+      const result = await getAllNearbyPlaces(point, locationPoints);
+      return result.json.results;
     })
   );
 
@@ -144,10 +117,8 @@ const getPlacesByType = async function(locationName, locationPoints) {
     .filter(place => isPlaceInArea(place.geometry.location, areaCoords))
     .filter(place => hasEnoughReviews(place));
 
-  // get unique
-  const uniquePlaces = uniqBy(places, place => place.id);
-
-  return uniquePlaces;
+  // return all the unique places
+  return uniqBy(places, place => place.id);
 };
 
 module.exports.getPlacesByType = getPlacesByType;
