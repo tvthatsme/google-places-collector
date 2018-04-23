@@ -2,12 +2,28 @@
   "name": "google-places-collector",
   "version": "0.0.2",
   "description": "get all the data for areas",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "watch 'npm run build' src",
+    "build": "babel src -d build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build",
+    "release": "np"
   },
   "author": "Timothy Vernon <timothy.n.vernon@gmail.com>",
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ],
+    "comments": false
+  },
   "bugs": {
     "url": "https://github.com/tvthatsme/google-places-collector/issues"
   },
@@ -18,5 +34,11 @@
     "dotenv": "^5.0.1",
     "lodash": "^4.17.5",
     "point-in-polygon": "^1.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "np": "^2.20.1",
+    "watch": "^1.0.2"
   }
 }
