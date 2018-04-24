@@ -28,6 +28,10 @@
     "url": "https://github.com/tvthatsme/google-places-collector/issues"
   },
   "homepage": "https://github.com/tvthatsme/google-places-collector",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tvthatsme/google-places-collector.git"
+  },
   "license": "MIT",
   "dependencies": {
     "@google/maps": "^0.4.5",
@@ -40,5 +44,13 @@
     "babel-preset-env": "^1.6.1",
     "np": "^2.20.1",
     "watch": "^1.0.2"
-  }
+  },
+  "keywords": [
+    "node",
+    "google-maps",
+    "google-maps-api",
+    "geocode",
+    "city",
+    "places"
+  ]
 }
