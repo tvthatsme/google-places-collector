@@ -25,10 +25,10 @@ You can either define a property in a seperate .env file under GOOGLE_MAPS_KEY o
 ### Collecting your data
 
 ```js
-const googlePlacesCollector = require('./index');
+const gpc = require('google-places-collector');
 
 const getPlaces = async () => {
-  const results = await places.getPlacesByType('Business Bay', 'restaurant');
+  const results = await gpc.getPlacesByType('Business Bay', 'restaurant');
   console.log(results);
 };
 
@@ -36,6 +36,27 @@ getPlaces();
 ```
 
 Results will be supplied by an async function with an array of place objects (in this case, a listing of all restraunts within Dubai's Business Bay area).
+
+### Running additional checks
+
+The `getPlacesByType` method does its best to collect only places that are within the place requested. However, due to the internal algorithm used, you might notice that there are few discrepancies. This can be fixed! The method for ensuring that all places returned fall within the requested area consumes additional API queries and is therefore exposed as an option method.
+
+Example:
+
+```js
+const gpc = require('google-places-collector');
+
+const getBusinessBayRestaurants = async () => {
+  const areaName = 'Business Bay';
+  // Get restaurants within Business Bay
+  const bestGuessData = await gpc.getPlacesByType(areaName, 'restaurant');
+  // Double check all the results and trim out any restaurants that are on
+  // the edge of the Business Bay area but not actually within
+  const bestData = await gpc.confirmPlaces(bestGuessData, areaName);
+};
+
+getBusinessBayRestaurants();
+```
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://forthebadge.com)

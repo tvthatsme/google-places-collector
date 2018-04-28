@@ -1,6 +1,6 @@
 {
   "name": "google-places-collector",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "get all the data for areas",
   "main": "build/index.js",
   "scripts": {
@@ -22,6 +22,7 @@
         }
       ]
     ],
+    "plugins": ["transform-object-rest-spread"],
     "comments": false
   },
   "bugs": {
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "np": "^2.20.1",
     "watch": "^1.0.2"
