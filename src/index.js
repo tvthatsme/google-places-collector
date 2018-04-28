@@ -122,3 +122,61 @@ const getPlacesByType = async function(locationName, locationPoints) {
 };
 
 module.exports.getPlacesByType = getPlacesByType;
+
+/**
+ * Determine if the address components array contains the area name.
+ *
+ * @param {Array} addressComponents
+ * @param {String} areaName
+ */
+const addressIncludesArea = (addressComponents, areaName) => {
+  return addressComponents.some(addressComponent => {
+    return areaName === addressComponent.long_name;
+  });
+};
+
+/**
+ * Confirm that an array of place objects are actually all included within the
+ * area. This method will return a new array of places that are guaranteed to
+ * be within the area.
+ *
+ * Performs 1 reverseGeocode API request for each place object in places array
+ *
+ * @param {Array} places place objects that should be located within an area
+ * @param {String} areaName name of the area that includes places
+ */
+const confirmPlaces = async function(places, areaName) {
+  // Get the reverse geocode information for each place
+  const geoCodes = await Promise.all(
+    places.map(async place => {
+      const geoCode = await googleMapsClient
+        .reverseGeocode({
+          place_id: place.place_id
+        })
+        .asPromise();
+
+      // Return a new object with all place data plus address components
+      return {
+        ...place,
+        addresses: geoCode.json.results[0].address_components
+      };
+    })
+  );
+
+  // Return the filtered list of places
+  return geoCodes.filter(place =>
+    addressIncludesArea(place.addresses, areaName)
+  );
+};
+
+module.exports.confirmPlaces = confirmPlaces;
+
+const test = async () => {
+  const areaName = 'Dubai Silicon Oasis';
+  const bestGuessData = await getPlacesByType(areaName, 'restaurant');
+  console.log(bestGuessData.length);
+  const bestData = await confirmPlaces(bestGuessData, areaName);
+  console.log(bestData.length);
+};
+
+test();
