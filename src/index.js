@@ -170,13 +170,3 @@ const confirmPlaces = async function(places, areaName) {
 };
 
 module.exports.confirmPlaces = confirmPlaces;
-
-const test = async () => {
-  const areaName = 'Dubai Silicon Oasis';
-  const bestGuessData = await getPlacesByType(areaName, 'restaurant');
-  console.log(bestGuessData.length);
-  const bestData = await confirmPlaces(bestGuessData, areaName);
-  console.log(bestData.length);
-};
-
-test();
