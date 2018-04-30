@@ -1,0 +1,15 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current"
+        },
+        "modules": false
+      }
+    ]
+  ],
+  "comments": false,
+  "plugins": ["external-helpers", "transform-object-rest-spread"]
+}
