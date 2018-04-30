@@ -1,6 +1,6 @@
 {
   "name": "google-places-collector",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "get all the data for areas",
   "main": "dist/google-places-collector.cjs.js",
   "module": "dist/google-places-collector.esm.js",
@@ -12,19 +12,6 @@
     "release": "np"
   },
   "author": "Timothy Vernon <timothy.n.vernon@gmail.com>",
-  "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ]
-    ],
-    "comments": false
-  },
   "bugs": {
     "url": "https://github.com/tvthatsme/google-places-collector/issues"
   },
@@ -43,6 +30,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "np": "^2.20.1",
     "rollup": "^0.58.2",
